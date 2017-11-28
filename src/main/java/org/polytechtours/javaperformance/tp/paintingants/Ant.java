@@ -5,87 +5,87 @@ package org.polytechtours.javaperformance.tp.paintingants;
 import java.awt.Color;
 import java.util.Random;
 
-public class CFourmi {
+public class Ant {
   // Tableau des incrémentations à effectuer sur la position des fourmis
   // en fonction de la direction du deplacement
-  static private int[][] mIncDirection = new int[8][2];
+  static private int[][] incDirection = new int[8][2];
   // le generateur aléatoire (Random est thread safe donc on la partage)
-  private static Random GenerateurAleatoire = new Random();
+  private static Random randomGenerator = new Random();
   // couleur déposé par la fourmi
-  private Color mCouleurDeposee;
-  private float mLuminanceCouleurSuivie;
+  private Color colorDeposed;
+  private float luminanceFollowingColor;
   // objet graphique sur lequel les fourmis peuvent peindre
-  private CPainting mPainting;
+  private MyCanvas painting;
   // Coordonées de la fourmi
   private int x, y;
   // Proba d'aller a gauche, en face, a droite, de suivre la couleur
-  private float[] mProba = new float[4];
+  private float[] proba = new float[4];
   // Numéro de la direction dans laquelle la fourmi regarde
-  private int mDirection;
+  private int direction;
   // Taille de la trace de phéromones déposée par la fourmi
-  private int mTaille;
+  private int size;
   // Pas d'incrémentation des directions suivant le nombre de directions
   // allouées à la fourmies
-  private int mDecalDir;
+  private int decalDir;
   // l'applet
-  private PaintingAnts mApplis;
+  private PaintingAnts applies;
   // seuil de luminance pour la détection de la couleur recherchée
-  private float mSeuilLuminance;
+  private float luminanceLimit;
   // nombre de déplacements de la fourmi
-  private long mNbDeplacements;
+  private long nbDeplacements;
 
   /*************************************************************************************************
   */
-  public CFourmi(Color pCouleurDeposee, Color pCouleurSuivie, float pProbaTD, float pProbaG, float pProbaD,
-      float pProbaSuivre, CPainting pPainting, char pTypeDeplacement, float pInit_x, float pInit_y, int pInitDirection,
-      int pTaille, float pSeuilLuminance, PaintingAnts pApplis) {
+  public Ant(Color pCouleurDeposee, Color pCouleurSuivie, float pProbaTD, float pProbaG, float pProbaD,
+             float pProbaSuivre, MyCanvas pPainting, char pTypeDeplacement, float pInit_x, float pInit_y, int pInitDirection,
+             int pTaille, float pSeuilLuminance, PaintingAnts pApplis) {
 
-    mCouleurDeposee = pCouleurDeposee;
-    mLuminanceCouleurSuivie = 0.2426f * pCouleurDeposee.getRed() + 0.7152f * pCouleurDeposee.getGreen()
+    colorDeposed = pCouleurDeposee;
+    luminanceFollowingColor = 0.2426f * pCouleurDeposee.getRed() + 0.7152f * pCouleurDeposee.getGreen()
         + 0.0722f * pCouleurDeposee.getBlue();
-    mPainting = pPainting;
-    mApplis = pApplis;
+    painting = pPainting;
+    applies = pApplis;
 
     // direction de départ
-    mDirection = pInitDirection;
+    direction = pInitDirection;
 
     // taille du trait
-    mTaille = pTaille;
+    size = pTaille;
 
     // initialisation des probas
-    mProba[0] = pProbaG; // proba d'aller à gauche
-    mProba[1] = pProbaTD; // proba d'aller tout droit
-    mProba[2] = pProbaD; // proba d'aller à droite
-    mProba[3] = pProbaSuivre; // proba de suivre la couleur
+    proba[0] = pProbaG; // proba d'aller à gauche
+    proba[1] = pProbaTD; // proba d'aller tout droit
+    proba[2] = pProbaD; // proba d'aller à droite
+    proba[3] = pProbaSuivre; // proba de suivre la couleur
 
     // nombre de directions pouvant être prises : 2 types de déplacement
     // possibles
     if (pTypeDeplacement == 'd') {
-      mDecalDir = 2;
+      decalDir = 2;
     } else {
-      mDecalDir = 1;
+      decalDir = 1;
     }
 
     // initialisation du tableau des directions
-    CFourmi.mIncDirection[0][0] = 0;
-    CFourmi.mIncDirection[0][1] = -1;
-    CFourmi.mIncDirection[1][0] = 1;
-    CFourmi.mIncDirection[1][1] = -1;
-    CFourmi.mIncDirection[2][0] = 1;
-    CFourmi.mIncDirection[2][1] = 0;
-    CFourmi.mIncDirection[3][0] = 1;
-    CFourmi.mIncDirection[3][1] = 1;
-    CFourmi.mIncDirection[4][0] = 0;
-    CFourmi.mIncDirection[4][1] = 1;
-    CFourmi.mIncDirection[5][0] = -1;
-    CFourmi.mIncDirection[5][1] = 1;
-    CFourmi.mIncDirection[6][0] = -1;
-    CFourmi.mIncDirection[6][1] = 0;
-    CFourmi.mIncDirection[7][0] = -1;
-    CFourmi.mIncDirection[7][1] = -1;
+    Ant.incDirection[0][0] = 0;
+    Ant.incDirection[0][1] = -1;
+    Ant.incDirection[1][0] = 1;
+    Ant.incDirection[1][1] = -1;
+    Ant.incDirection[2][0] = 1;
+    Ant.incDirection[2][1] = 0;
+    Ant.incDirection[3][0] = 1;
+    Ant.incDirection[3][1] = 1;
+    Ant.incDirection[4][0] = 0;
+    Ant.incDirection[4][1] = 1;
+    Ant.incDirection[5][0] = -1;
+    Ant.incDirection[5][1] = 1;
+    Ant.incDirection[6][0] = -1;
+    Ant.incDirection[6][1] = 0;
+    Ant.incDirection[7][0] = -1;
+    Ant.incDirection[7][1] = -1;
 
-    mSeuilLuminance = pSeuilLuminance;
-    mNbDeplacements = 0;
+    luminanceLimit = pSeuilLuminance;
+    nbDeplacements = 0;
   }
 
   /*************************************************************************************************
@@ -98,7 +98,7 @@ public class CFourmi {
     int i, j;
     Color lCouleur;
 
-    mNbDeplacements++;
+    nbDeplacements++;
 
     dir[0] = 0;
     dir[1] = 0;
@@ -107,33 +107,33 @@ public class CFourmi {
     // le tableau dir contient 0 si la direction concernée ne contient pas la
     // couleur
     // à suivre, et 1 sinon (dir[0]=gauche, dir[1]=tt_droit, dir[2]=droite)
-    i = modulo(x + CFourmi.mIncDirection[modulo(mDirection - mDecalDir, 8)][0], mPainting.getLargeur());
-    j = modulo(y + CFourmi.mIncDirection[modulo(mDirection - mDecalDir, 8)][1], mPainting.getHauteur());
-    if (mApplis.mBaseImage != null) {
-      lCouleur = new Color(mApplis.mBaseImage.getRGB(i, j));
+    i = modulo(x + Ant.incDirection[modulo(direction - decalDir, 8)][0], painting.getLargeur());
+    j = modulo(y + Ant.incDirection[modulo(direction - decalDir, 8)][1], painting.getHauteur());
+    if (applies.mBaseImage != null) {
+      lCouleur = new Color(applies.mBaseImage.getRGB(i, j));
     } else {
-      lCouleur = new Color(mPainting.getCouleur(i, j).getRGB());
+      lCouleur = new Color(painting.getCouleur(i, j).getRGB());
     }
     if (testCouleur(lCouleur)) {
       dir[0] = 1;
     }
 
-    i = modulo(x + CFourmi.mIncDirection[mDirection][0], mPainting.getLargeur());
-    j = modulo(y + CFourmi.mIncDirection[mDirection][1], mPainting.getHauteur());
-    if (mApplis.mBaseImage != null) {
-      lCouleur = new Color(mApplis.mBaseImage.getRGB(i, j));
+    i = modulo(x + Ant.incDirection[direction][0], painting.getLargeur());
+    j = modulo(y + Ant.incDirection[direction][1], painting.getHauteur());
+    if (applies.mBaseImage != null) {
+      lCouleur = new Color(applies.mBaseImage.getRGB(i, j));
     } else {
-      lCouleur = new Color(mPainting.getCouleur(i, j).getRGB());
+      lCouleur = new Color(painting.getCouleur(i, j).getRGB());
     }
     if (testCouleur(lCouleur)) {
       dir[1] = 1;
     }
-    i = modulo(x + CFourmi.mIncDirection[modulo(mDirection + mDecalDir, 8)][0], mPainting.getLargeur());
-    j = modulo(y + CFourmi.mIncDirection[modulo(mDirection + mDecalDir, 8)][1], mPainting.getHauteur());
-    if (mApplis.mBaseImage != null) {
-      lCouleur = new Color(mApplis.mBaseImage.getRGB(i, j));
+    i = modulo(x + Ant.incDirection[modulo(direction + decalDir, 8)][0], painting.getLargeur());
+    j = modulo(y + Ant.incDirection[modulo(direction + decalDir, 8)][1], painting.getHauteur());
+    if (applies.mBaseImage != null) {
+      lCouleur = new Color(applies.mBaseImage.getRGB(i, j));
     } else {
-      lCouleur = new Color(mPainting.getCouleur(i, j).getRGB());
+      lCouleur = new Color(painting.getCouleur(i, j).getRGB());
     }
     if (testCouleur(lCouleur)) {
       dir[2] = 1;
@@ -141,19 +141,19 @@ public class CFourmi {
 
     // tirage d'un nombre aléatoire permettant de savoir si la fourmi va suivre
     // ou non la couleur
-    tirage = GenerateurAleatoire.nextFloat();// Math.random();
+    tirage = randomGenerator.nextFloat();// Math.random();
 
     // la fourmi suit la couleur
-    if (((tirage <= mProba[3]) && ((dir[0] + dir[1] + dir[2]) > 0)) || ((dir[0] + dir[1] + dir[2]) == 3)) {
-      prob1 = (dir[0]) * mProba[0];
-      prob2 = (dir[1]) * mProba[1];
-      prob3 = (dir[2]) * mProba[2];
+    if (((tirage <= proba[3]) && ((dir[0] + dir[1] + dir[2]) > 0)) || ((dir[0] + dir[1] + dir[2]) == 3)) {
+      prob1 = (dir[0]) * proba[0];
+      prob2 = (dir[1]) * proba[1];
+      prob3 = (dir[2]) * proba[2];
     }
     // la fourmi ne suit pas la couleur
     else {
-      prob1 = (1 - dir[0]) * mProba[0];
-      prob2 = (1 - dir[1]) * mProba[1];
-      prob3 = (1 - dir[2]) * mProba[2];
+      prob1 = (1 - dir[0]) * proba[0];
+      prob2 = (1 - dir[1]) * proba[1];
+      prob3 = (1 - dir[2]) * proba[2];
     }
     total = prob1 + prob2 + prob3;
     prob1 = prob1 / total;
@@ -161,33 +161,33 @@ public class CFourmi {
     prob3 = prob3 / total + prob2;
 
     // incrémentation de la direction de la fourmi selon la direction choisie
-    tirage = GenerateurAleatoire.nextFloat();// Math.random();
+    tirage = randomGenerator.nextFloat();// Math.random();
     if (tirage < prob1) {
-      mDirection = modulo(mDirection - mDecalDir, 8);
+      direction = modulo(direction - decalDir, 8);
     } else {
       if (tirage < prob2) {
         /* rien, on va tout droit */
       } else {
-        mDirection = modulo(mDirection + mDecalDir, 8);
+        direction = modulo(direction + decalDir, 8);
       }
     }
 
-    x += CFourmi.mIncDirection[mDirection][0];
-    y += CFourmi.mIncDirection[mDirection][1];
+    x += Ant.incDirection[direction][0];
+    y += Ant.incDirection[direction][1];
 
-    x = modulo(x, mPainting.getLargeur());
-    y = modulo(y, mPainting.getHauteur());
+    x = modulo(x, painting.getLargeur());
+    y = modulo(y, painting.getHauteur());
 
     // coloration de la nouvelle position de la fourmi
-    mPainting.setCouleur(x, y, mCouleurDeposee, mTaille);
+    painting.setCouleur(x, y, colorDeposed, size);
 
-    mApplis.IncrementFpsCounter();
+    applies.IncrementFpsCounter();
   }
 
   /*************************************************************************************************
   */
   public long getNbDeplacements() {
-    return mNbDeplacements;
+    return nbDeplacements;
   }
   /****************************************************************************/
 
@@ -229,7 +229,7 @@ public class CFourmi {
     lLuminance = 0.2426f * pCouleur.getRed() + 0.7152f * pCouleur.getGreen() + 0.0722f * pCouleur.getBlue();
 
     /* test */
-    if (Math.abs(mLuminanceCouleurSuivie - lLuminance) < mSeuilLuminance) {
+    if (Math.abs(luminanceFollowingColor - lLuminance) < luminanceLimit) {
       lReponse = true;
       // System.out.print(x);
     }

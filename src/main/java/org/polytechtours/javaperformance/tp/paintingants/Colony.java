@@ -1,7 +1,7 @@
 package org.polytechtours.javaperformance.tp.paintingants;
 
 /*
- * CColonie.java
+ * Colony.java
  *
  * Created on 11 avril 2007, 16:35
  *
@@ -11,29 +11,29 @@ package org.polytechtours.javaperformance.tp.paintingants;
  */
 import java.util.Vector;
 
-public class CColonie implements Runnable {
+public class Colony implements Runnable {
 
-  private Boolean mContinue = Boolean.TRUE;
-  private Vector<CFourmi> mColonie;
+  private Boolean mustContinue = Boolean.TRUE;
+  private Vector<Ant> colonies;
   private PaintingAnts mApplis;
 
-  /** Creates a new instance of CColonie */
-  public CColonie(Vector<CFourmi> pColonie, PaintingAnts pApplis) {
-    mColonie = pColonie;
+  /** Creates a new instance of Colony */
+  public Colony(Vector<Ant> pColonie, PaintingAnts pApplis) {
+    colonies = pColonie;
     mApplis = pApplis;
   }
 
   public void pleaseStop() {
-    mContinue = false;
+    mustContinue = false;
   }
 
   @Override
   public void run() {
 
-    while (mContinue == true) {
+    while (mustContinue == true) {
       if (!mApplis.getPause()) {
-        for (int i = 0; i < mColonie.size(); i++) {
-          mColonie.get(i).deplacer();
+        for (int i = 0; i < colonies.size(); i++) {
+          colonies.get(i).deplacer();
           mApplis.compteur();
         }
       } else {

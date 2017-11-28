@@ -20,11 +20,11 @@ public class PaintingAnts extends java.applet.Applet implements Runnable {
   private int mHauteur;
 
   // l'objet graphique lui meme
-  private CPainting mPainting;
+  private MyCanvas mPainting;
 
   // les fourmis
-  private Vector<CFourmi> mColonie = new Vector<CFourmi>();
-  private CColonie mColony;
+  private Vector<Ant> mColonie = new Vector<Ant>();
+  private Colony mColony;
 
   private Thread mApplis, mThreadColony;
 
@@ -119,7 +119,7 @@ public class PaintingAnts extends java.applet.Applet implements Runnable {
     mLargeur = mDimension.width;
     mHauteur = mDimension.height;
 
-    mPainting = new CPainting(mDimension, this);
+    mPainting = new MyCanvas(mDimension, this);
     add(mPainting);
 
     // lecture de l'image
@@ -235,7 +235,7 @@ public class PaintingAnts extends java.applet.Applet implements Runnable {
     String lChaine;
     int R, G, B;
     Color lCouleurDeposee, lCouleurSuivie;
-    CFourmi lFourmi;
+    Ant lFourmi;
     float lProbaTD, lProbaG, lProbaD, lProbaSuivre, lSeuilLuminance;
     char lTypeDeplacement = ' ';
     int lInitDirection, lTaille;
@@ -374,7 +374,7 @@ public class PaintingAnts extends java.applet.Applet implements Runnable {
             "(" + lTypeDeplacement + "," + lProbaG + "," + lProbaTD + "," + lProbaD + "," + lProbaSuivre + ");");
 
         // création de la fourmi
-        lFourmi = new CFourmi(lCouleurDeposee, lCouleurSuivie, lProbaTD, lProbaG, lProbaD, lProbaSuivre, mPainting,
+        lFourmi = new Ant(lCouleurDeposee, lCouleurSuivie, lProbaTD, lProbaG, lProbaD, lProbaSuivre, mPainting,
             lTypeDeplacement, lInit_x, lInit_y, lInitDirection, lTaille, lSeuilLuminance, this);
         mColonie.addElement(lFourmi);
         lNbFourmis++;
@@ -434,7 +434,7 @@ public class PaintingAnts extends java.applet.Applet implements Runnable {
             "(" + lTypeDeplacement + "," + lProbaG + "," + lProbaTD + "," + lProbaD + "," + lProbaSuivre + ");");
 
         // création et ajout de la fourmi dans la colonie
-        lFourmi = new CFourmi(lTabColor[i], lTabColor[lColor], lProbaTD, lProbaG, lProbaD, lProbaSuivre, mPainting,
+        lFourmi = new Ant(lTabColor[i], lTabColor[lColor], lProbaTD, lProbaG, lProbaD, lProbaSuivre, mPainting,
             lTypeDeplacement, lInit_x, lInit_y, lInitDirection, lTaille, lSeuilLuminance, this);
         mColonie.addElement(lFourmi);
       }
@@ -461,7 +461,7 @@ public class PaintingAnts extends java.applet.Applet implements Runnable {
 
     /*
      * for ( i=0 ; i<mColonie.size() ; i++ ) {
-     * ((CFourmi)mColonie.elementAt(i)).start(); }
+     * ((Ant)mColonie.elementAt(i)).start(); }
      */
 
     mThreadColony.start();
@@ -500,7 +500,7 @@ public class PaintingAnts extends java.applet.Applet implements Runnable {
   @Override
   public void start() {
     // System.out.println(this.getName()+ ":start()");
-    mColony = new CColonie(mColonie, this);
+    mColony = new Colony(mColonie, this);
     mThreadColony = new Thread(mColony);
     mThreadColony.setPriority(Thread.MIN_PRIORITY);
 

@@ -35,7 +35,6 @@
 					<source>${java.sources}</source>
 					<target>${java.target}</target>
 					<debug>true</debug>
-					<failOnOver>false</failOnOver>
 					<optimize>true</optimize>
 					<showDeprecation>true</showDeprecation>
 					<showWarnings>true</showWarnings>
