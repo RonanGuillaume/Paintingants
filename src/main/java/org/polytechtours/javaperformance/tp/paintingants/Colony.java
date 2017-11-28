@@ -14,13 +14,13 @@ import java.util.Vector;
 public class Colony implements Runnable {
 
   private Boolean mustContinue = Boolean.TRUE;
-  private Vector<Ant> colonies;
-  private PaintingAnts mApplis;
+  private Vector<Ant> ants;
+  private PaintingAnts paintingAnts;
 
   /** Creates a new instance of Colony */
-  public Colony(Vector<Ant> pColonie, PaintingAnts pApplis) {
-    colonies = pColonie;
-    mApplis = pApplis;
+  public Colony(Vector<Ant> ants, PaintingAnts paintingAnts) {
+    this.ants = ants;
+    this.paintingAnts = paintingAnts;
   }
 
   public void pleaseStop() {
@@ -30,17 +30,12 @@ public class Colony implements Runnable {
   @Override
   public void run() {
 
-    while (mustContinue == true) {
-      if (!mApplis.getPause()) {
-        for (int i = 0; i < colonies.size(); i++) {
-          colonies.get(i).deplacer();
-          mApplis.compteur();
+    while (mustContinue) {
+      if (!paintingAnts.getPause()) {
+        for (Ant ant : ants) {
+          ant.deplacer();
+          paintingAnts.compteur();
         }
-      } else {
-        /*
-         * try { Thread.sleep(100); } catch (InterruptedException e) { break; }
-         */
-
       }
     }
   }
