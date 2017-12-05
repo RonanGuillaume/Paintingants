@@ -408,6 +408,7 @@ public class PaintingAnts extends java.applet.Applet {
 
     showStatus("starting...");
 
+    this.run();
   }
 
   /****************************************************************************/
