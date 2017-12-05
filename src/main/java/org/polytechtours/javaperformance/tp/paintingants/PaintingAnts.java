@@ -13,7 +13,7 @@ import java.util.Vector;
 
 import javax.swing.Timer;
 
-public class PaintingAnts extends java.applet.Applet implements Runnable {
+public class PaintingAnts extends java.applet.Applet {
   private static final long serialVersionUID = 1L;
   // parametres
   private int mLargeur;
@@ -26,11 +26,8 @@ public class PaintingAnts extends java.applet.Applet implements Runnable {
   private Vector<Ant> mColonie = new Vector<Ant>();
   private Colony mColony;
 
-  private Thread mApplis, mThreadColony;
-
   private Dimension mDimension;
-  private long mCompteur = 0;
-  private Object mMutexCompteur = new Object();
+  private long counter = 0;
   private boolean mPause = false;
 
   public BufferedImage mBaseImage;
@@ -38,29 +35,15 @@ public class PaintingAnts extends java.applet.Applet implements Runnable {
 
   /** Fourmis per second :) */
   private Long fpsCounter = 0L;
-  /** stocke la valeur du compteur lors du dernier timer */
+  /** stocke la valeur du incrementCounter lors du dernier timer */
   private Long lastFps = 0L;
 
-  /****************************************************************************/
-  /**
-   * incrémenter le compteur
-   *
-   */
-  public void compteur() {
-    synchronized (mMutexCompteur) {
-      mCompteur++;
-    }
+  public void incrementCounter() {
+    counter++;
   }
 
-  /****************************************************************************/
-  /**
-   * Détruire l'applet
-   *
-   */
   @Override
   public void destroy() {
-    // System.out.println(this.getName()+ ":destroy()");
-
     if (mApplis != null) {
       mApplis = null;
     }
@@ -475,8 +458,8 @@ public class PaintingAnts extends java.applet.Applet implements Runnable {
         }
 
         synchronized (mMutexCompteur) {
-          mCompteur %= 10000;
-          for (i = 0; i < mCompteur / 1000; i++) {
+          counter %= 10000;
+          for (i = 0; i < counter / 1000; i++) {
             lMessage += ".";
           }
         }

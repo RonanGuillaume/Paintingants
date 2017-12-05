@@ -34,7 +34,7 @@ public class Colony implements Runnable {
       if (!mApplis.getPause()) {
         for (int i = 0; i < colonies.size(); i++) {
           colonies.get(i).deplacer();
-          mApplis.compteur();
+          mApplis.incrementCounter();
         }
       } else {
         /*
