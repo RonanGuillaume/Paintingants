@@ -26,6 +26,8 @@ public class PaintingAnts extends java.applet.Applet {
   private Vector<Ant> mColonie = new Vector<Ant>();
   private Colony mColony;
 
+  private Thread mThreadColony;
+
   private Dimension mDimension;
   private long counter = 0;
   private boolean pause = false;
@@ -377,6 +379,8 @@ public class PaintingAnts extends java.applet.Applet {
 
     mPainting.init();
 
+    mThreadColony.start();
+
     while (true) {
       if (pause) {
         lMessage = "pause";
@@ -397,6 +401,9 @@ public class PaintingAnts extends java.applet.Applet {
     // System.out.println(this.getName()+ ":start()");
     mColony = new Colony(mColonie, this);
 
+    mThreadColony = new Thread(mColony);
+    mThreadColony.setPriority(Thread.MIN_PRIORITY);
+
     fpsTimer = new Timer(1000, new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -408,7 +415,7 @@ public class PaintingAnts extends java.applet.Applet {
 
     showStatus("starting...");
 
-    this.run();
+    this.start();
   }
 
   /****************************************************************************/
@@ -429,7 +436,7 @@ public class PaintingAnts extends java.applet.Applet {
   /**
    * update Fourmis per second
    */
-  private synchronized void updateFPS() {
+  private void updateFPS() {
     lastFps = fpsCounter;
     fpsCounter = 0L;
   }
