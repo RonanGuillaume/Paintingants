@@ -181,7 +181,7 @@ public class Ant {
     // coloration de la nouvelle position de la fourmi
     painting.setCouleur(x, y, colorDeposed, size);
 
-    applies.IncrementFpsCounter();
+    applies.incrementFpsCounter();
   }
 
   /*************************************************************************************************

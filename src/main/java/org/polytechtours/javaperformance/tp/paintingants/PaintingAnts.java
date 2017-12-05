@@ -28,7 +28,7 @@ public class PaintingAnts extends java.applet.Applet {
 
   private Dimension mDimension;
   private long counter = 0;
-  private boolean mPause = false;
+  private boolean pause = false;
 
   public BufferedImage mBaseImage;
   private Timer fpsTimer;
@@ -43,27 +43,9 @@ public class PaintingAnts extends java.applet.Applet {
   }
 
   @Override
-  public void destroy() {
-    if (mApplis != null) {
-      mApplis = null;
-    }
-  }
-
-  /****************************************************************************/
-  /**
-   * Obtenir l'information Applet
-   *
-   */
-  @Override
   public String getAppletInfo() {
     return "Painting Ants";
   }
-
-  /****************************************************************************/
-  /**
-   * Obtenir l'information Applet
-   *
-   */
 
   @Override
   public String[][] getParameterInfo() {
@@ -73,24 +55,14 @@ public class PaintingAnts extends java.applet.Applet {
     return lInfo;
   }
 
-  /****************************************************************************/
-  /**
-   * Obtenir l'état de pause
-   *
-   */
-  public boolean getPause() {
-    return mPause;
+  public boolean isPause() {
+    return pause;
   }
 
-  public synchronized void IncrementFpsCounter() {
+  public void incrementFpsCounter() {
     fpsCounter++;
   }
 
-  /****************************************************************************/
-  /**
-   * Initialisation de l'applet
-   *
-   */
   @Override
   public void init() {
     URL lFileName;
@@ -126,44 +98,19 @@ public class PaintingAnts extends java.applet.Applet {
     setLayout(null);
   }
 
-  /****************************************************************************/
-  /**
-   * Paint the image and all active highlights.
-   */
+
   @Override
   public void paint(Graphics g) {
-
     if (mBaseImage == null) {
       return;
     }
     g.drawImage(mBaseImage, 0, 0, this);
   }
-  /****************************************************************************/
-  /****************************************************************************/
-  /****************************************************************************/
-  /****************************************************************************/
-  /****************************************************************************/
-  /****************************************************************************/
-  /****************************************************************************/
 
-  /****************************************************************************/
-  /**
-   * Mettre en pause
-   *
-   */
   public void pause() {
-    mPause = !mPause;
-    // if (!mPause)
-    // {
-    // notify();
-    // }
+    pause = !pause;
   }
 
-  // =========================================================================
-  // cette fonction analyse une chaine :
-  // si pStr est un nombre : sa valeur est retournée
-  // si pStr est un interval x..y : une valeur au hasard dans [x,y] est
-  // retournée
   private float readFloatParameter(String pStr) {
     float lMin, lMax, lResult;
     // System.out.println(" chaine pStr: "+pStr);
@@ -212,8 +159,6 @@ public class PaintingAnts extends java.applet.Applet {
     return lResult;
   }
 
-  // =========================================================================
-  // lecture des paramètres de l'applet
   private void readParameterFourmis() {
     String lChaine;
     int R, G, B;
@@ -426,66 +371,31 @@ public class PaintingAnts extends java.applet.Applet {
     // System.out.println("Nombre de Fourmis:"+lNbFourmis);
   }
 
-  /*************************************************************************************************
-   * Titre : boolean testCouleur() Description : fonction testant l'égalité de
-   * deux couleurs
-   *
-   */
-  @Override
   public void run() {
-    // System.out.println(this.getName()+ ":run()");
-
     int i;
     String lMessage;
 
     mPainting.init();
 
-    Thread currentThread = Thread.currentThread();
-
-    /*
-     * for ( i=0 ; i<mColonie.size() ; i++ ) {
-     * ((Ant)mColonie.elementAt(i)).start(); }
-     */
-
-    mThreadColony.start();
-
-    while (mApplis == currentThread) {
-      if (mPause) {
+    while (true) {
+      if (pause) {
         lMessage = "pause";
       } else {
-        synchronized (this) {
           lMessage = "running (" + lastFps + ") ";
-        }
-
-        synchronized (mMutexCompteur) {
           counter %= 10000;
           for (i = 0; i < counter / 1000; i++) {
             lMessage += ".";
           }
-        }
-
       }
       showStatus(lMessage);
-
-      try {
-        Thread.sleep(10);
-      } catch (InterruptedException e) {
-        showStatus(e.toString());
-      }
     }
   }
 
-  /****************************************************************************/
-  /**
-   * Lancer l'applet
-   *
-   */
+
   @Override
   public void start() {
     // System.out.println(this.getName()+ ":start()");
     mColony = new Colony(mColonie, this);
-    mThreadColony = new Thread(mColony);
-    mThreadColony.setPriority(Thread.MIN_PRIORITY);
 
     fpsTimer = new Timer(1000, new ActionListener() {
       @Override
@@ -498,10 +408,7 @@ public class PaintingAnts extends java.applet.Applet {
 
     showStatus("starting...");
     // Create the thread.
-    mApplis = new Thread(this);
     // and let it start running
-    mApplis.setPriority(Thread.MIN_PRIORITY);
-    mApplis.start();
   }
 
   /****************************************************************************/

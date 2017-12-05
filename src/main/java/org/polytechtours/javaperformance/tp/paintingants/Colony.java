@@ -31,7 +31,7 @@ public class Colony implements Runnable {
   public void run() {
 
     while (mustContinue == true) {
-      if (!mApplis.getPause()) {
+      if (!mApplis.isPause()) {
         for (int i = 0; i < colonies.size(); i++) {
           colonies.get(i).deplacer();
           mApplis.incrementCounter();
