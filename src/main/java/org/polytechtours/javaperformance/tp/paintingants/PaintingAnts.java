@@ -407,8 +407,7 @@ public class PaintingAnts extends java.applet.Applet {
     fpsTimer.start();
 
     showStatus("starting...");
-    // Create the thread.
-    // and let it start running
+
   }
 
   /****************************************************************************/
@@ -424,13 +423,6 @@ public class PaintingAnts extends java.applet.Applet {
 
     // On demande au Thread Colony de s'arreter et on attend qu'il s'arrete
     mColony.pleaseStop();
-    try {
-      mThreadColony.join();
-    } catch (Exception e) {
-    }
-
-    mThreadColony = null;
-    mApplis = null;
   }
 
   /**
