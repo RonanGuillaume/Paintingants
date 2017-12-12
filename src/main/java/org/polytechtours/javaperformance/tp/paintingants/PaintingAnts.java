@@ -13,6 +13,9 @@ import java.util.Vector;
 
 import javax.swing.Timer;
 
+
+
+//Start -> Run -> Init
 public class PaintingAnts extends java.applet.Applet implements Runnable {
   private static final long serialVersionUID = 1L;
   // parametres
@@ -26,7 +29,7 @@ public class PaintingAnts extends java.applet.Applet implements Runnable {
   private Vector<Ant> mColonie = new Vector<Ant>();
   private Colony mColony;
 
-  private Thread mApplis, mThreadColony;
+  private Thread mApplis;
 
   private Dimension mDimension;
   private long mCompteur = 0;
@@ -155,13 +158,7 @@ public class PaintingAnts extends java.applet.Applet implements Runnable {
     }
     g.drawImage(mBaseImage, 0, 0, this);
   }
-  /****************************************************************************/
-  /****************************************************************************/
-  /****************************************************************************/
-  /****************************************************************************/
-  /****************************************************************************/
-  /****************************************************************************/
-  /****************************************************************************/
+
 
   /****************************************************************************/
   /**
@@ -459,26 +456,17 @@ public class PaintingAnts extends java.applet.Applet implements Runnable {
 
     Thread currentThread = Thread.currentThread();
 
-    /*
-     * for ( i=0 ; i<mColonie.size() ; i++ ) {
-     * ((Ant)mColonie.elementAt(i)).start(); }
-     */
-
-    mThreadColony.start();
 
     while (mApplis == currentThread) {
+      mColony.run();
       if (mPause) {
         lMessage = "pause";
       } else {
-        synchronized (this) {
           lMessage = "running (" + lastFps + ") ";
-        }
 
-        synchronized (mMutexCompteur) {
           mCompteur %= 10000;
           for (i = 0; i < mCompteur / 1000; i++) {
             lMessage += ".";
-          }
         }
 
       }
@@ -501,8 +489,6 @@ public class PaintingAnts extends java.applet.Applet implements Runnable {
   public void start() {
     // System.out.println(this.getName()+ ":start()");
     mColony = new Colony(mColonie, this);
-    mThreadColony = new Thread(mColony);
-    mThreadColony.setPriority(Thread.MIN_PRIORITY);
 
     fpsTimer = new Timer(1000, new ActionListener() {
       @Override
@@ -534,12 +520,7 @@ public class PaintingAnts extends java.applet.Applet implements Runnable {
 
     // On demande au Thread Colony de s'arreter et on attend qu'il s'arrete
     mColony.pleaseStop();
-    try {
-      mThreadColony.join();
-    } catch (Exception e) {
-    }
 
-    mThreadColony = null;
     mApplis = null;
   }
 

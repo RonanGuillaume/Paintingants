@@ -11,7 +11,7 @@ package org.polytechtours.javaperformance.tp.paintingants;
  */
 import java.util.Vector;
 
-public class Colony implements Runnable {
+public class Colony{
 
   private Boolean mustContinue = Boolean.TRUE;
   private Vector<Ant> colonies;
@@ -27,10 +27,8 @@ public class Colony implements Runnable {
     mustContinue = false;
   }
 
-  @Override
   public void run() {
 
-    while (mustContinue == true) {
       if (!mApplis.getPause()) {
         for (int i = 0; i < colonies.size(); i++) {
           colonies.get(i).deplacer();
@@ -42,7 +40,6 @@ public class Colony implements Runnable {
          */
 
       }
-    }
   }
 
 }
