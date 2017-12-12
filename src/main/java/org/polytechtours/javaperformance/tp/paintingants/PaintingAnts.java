@@ -47,9 +47,7 @@ public class PaintingAnts extends java.applet.Applet implements Runnable {
    *
    */
   public void compteur() {
-    synchronized (mMutexCompteur) {
       mCompteur++;
-    }
   }
 
   /****************************************************************************/
@@ -99,7 +97,7 @@ public class PaintingAnts extends java.applet.Applet implements Runnable {
     return mPause;
   }
 
-  public synchronized void IncrementFpsCounter() {
+  public void IncrementFpsCounter() {
     fpsCounter++;
   }
 
@@ -470,15 +468,11 @@ public class PaintingAnts extends java.applet.Applet implements Runnable {
       if (mPause) {
         lMessage = "pause";
       } else {
-        synchronized (this) {
           lMessage = "running (" + lastFps + ") ";
-        }
 
-        synchronized (mMutexCompteur) {
           mCompteur %= 10000;
           for (i = 0; i < mCompteur / 1000; i++) {
             lMessage += ".";
-          }
         }
 
       }
@@ -546,7 +540,7 @@ public class PaintingAnts extends java.applet.Applet implements Runnable {
   /**
    * update Fourmis per second
    */
-  private synchronized void updateFPS() {
+  private void updateFPS() {
     lastFps = fpsCounter;
     fpsCounter = 0L;
   }
