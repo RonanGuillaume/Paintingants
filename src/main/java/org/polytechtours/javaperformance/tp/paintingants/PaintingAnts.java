@@ -16,7 +16,7 @@ import javax.swing.Timer;
 
 
 //Start -> Run -> Init
-public class PaintingAnts extends java.applet.Applet implements Runnable {
+public class PaintingAnts extends java.applet.Applet implements Runnable{
     private static final long serialVersionUID = 1L;
     // parametres
     private int mLargeur;
@@ -50,9 +50,7 @@ public class PaintingAnts extends java.applet.Applet implements Runnable {
      *
      */
     public void incrementCounter() {
-        synchronized (mMutexCompteur) {
             mCompteur++;
-        }
     }
 
     /****************************************************************************/
@@ -64,9 +62,6 @@ public class PaintingAnts extends java.applet.Applet implements Runnable {
     public void destroy() {
         // System.out.println(this.getName()+ ":destroy()");
 
-        if (mApplis != null) {
-            mApplis = null;
-        }
     }
 
     /****************************************************************************/
@@ -102,7 +97,7 @@ public class PaintingAnts extends java.applet.Applet implements Runnable {
         return mPause;
     }
 
-    public synchronized void IncrementFpsCounter() {
+    public void IncrementFpsCounter() {
         fpsCounter++;
     }
 
@@ -445,6 +440,7 @@ public class PaintingAnts extends java.applet.Applet implements Runnable {
      * deux couleurs
      *
      */
+    @Override
     public void run() {
         // System.out.println(this.getName()+ ":moveAllMyAnts()");
 
@@ -456,7 +452,7 @@ public class PaintingAnts extends java.applet.Applet implements Runnable {
         Thread currentThread = Thread.currentThread();
 
 
-    while (mApplis == currentThread) {
+        while (mApplis == currentThread) {
             mColony.moveAllMyAnts();
             if (mPause) {
                 lMessage = "pause";
@@ -495,11 +491,20 @@ public class PaintingAnts extends java.applet.Applet implements Runnable {
         fpsTimer.start();
 
         showStatus("starting...");
+
         // Create the thread.
         mApplis = new Thread(this);
         // and let it start running
         mApplis.setPriority(Thread.MIN_PRIORITY);
         mApplis.start();
+
+
+
+//        // Create the thread.
+//        mApplis = new Thread(this);
+//        // and let it start running
+//        mApplis.setPriority(Thread.MIN_PRIORITY);
+//        mApplis.start();
     }
 
     /****************************************************************************/
@@ -513,13 +518,12 @@ public class PaintingAnts extends java.applet.Applet implements Runnable {
 
         fpsTimer.stop();
 
-        mApplis = null;
     }
 
     /**
      * update Fourmis per second
      */
-    private synchronized void updateFPS() {
+    private void updateFPS() {
         lastFps = fpsCounter;
         fpsCounter = 0L;
     }

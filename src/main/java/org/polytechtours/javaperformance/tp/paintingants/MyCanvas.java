@@ -71,7 +71,6 @@ public class MyCanvas extends Canvas implements MouseListener {
 
     // initialisation de la matrice des couleurs
     mCouleurs = new Color[mDimension.width][mDimension.height];
-    synchronized (mMutexCouleurs) {
       for (i = 0; i != mDimension.width; i++) {
         for (j = 0; j != mDimension.height; j++) {
           mCouleurs[i][j] = new Color(mCouleurFond.getRed(), mCouleurFond.getGreen(), mCouleurFond.getBlue());
@@ -79,16 +78,13 @@ public class MyCanvas extends Canvas implements MouseListener {
       }
     }
 
-  }
 
   /******************************************************************************
    * Titre : Color getCouleur Description : Cette fonction renvoie la couleur
    * d'une case
    ******************************************************************************/
   public Color getCouleur(int x, int y) {
-    synchronized (mMutexCouleurs) {
       return mCouleurs[x][y];
-    }
   }
 
   /******************************************************************************
@@ -121,9 +117,9 @@ public class MyCanvas extends Canvas implements MouseListener {
    ******************************************************************************/
   public void init() {
     int i, j;
+
     mGraphics = getGraphics();
-    synchronized (mMutexCouleurs) {
-      mGraphics.clearRect(0, 0, mDimension.width, mDimension.height);
+    mGraphics.clearRect(0, 0, mDimension.width, mDimension.height);
 
       // initialisation de la matrice des couleurs
 
@@ -131,7 +127,6 @@ public class MyCanvas extends Canvas implements MouseListener {
         for (j = 0; j != mDimension.height; j++) {
           mCouleurs[i][j] = new Color(mCouleurFond.getRed(), mCouleurFond.getGreen(), mCouleurFond.getBlue());
         }
-      }
     }
 
     // initialisation de la matrice de convolution : lissage moyen sur 9
@@ -243,6 +238,7 @@ public class MyCanvas extends Canvas implements MouseListener {
     MyCanvas.mMatriceConv49[6][6] = 1 / 128f;
 
     mSuspendu = false;
+
   }
 
   /****************************************************************************/
@@ -293,7 +289,6 @@ public class MyCanvas extends Canvas implements MouseListener {
   public void paint(Graphics pGraphics) {
     int i, j;
 
-    synchronized (mMutexCouleurs) {
       for (i = 0; i < mDimension.width; i++) {
         for (j = 0; j < mDimension.height; j++) {
           pGraphics.setColor(mCouleurs[i][j]);
@@ -301,7 +296,6 @@ public class MyCanvas extends Canvas implements MouseListener {
         }
       }
     }
-  }
 
   /******************************************************************************
    * Titre : void colorer_case(int x, int y, Color c) Description : Cette
@@ -313,7 +307,6 @@ public class MyCanvas extends Canvas implements MouseListener {
     float R, G, B;
     Color lColor;
 
-    synchronized (mMutexCouleurs) {
       if (!mSuspendu) {
         // on colorie la case sur laquelle se trouve la fourmi
         mGraphics.setColor(c);
@@ -413,7 +406,6 @@ public class MyCanvas extends Canvas implements MouseListener {
           break;
       }// end switch
     }
-  }
 
   /******************************************************************************
    * Titre : setSupendu Description : Cette fonction change l'état de suspension
