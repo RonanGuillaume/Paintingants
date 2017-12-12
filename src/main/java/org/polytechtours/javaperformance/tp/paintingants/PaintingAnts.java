@@ -41,15 +41,15 @@ public class PaintingAnts extends java.applet.Applet implements Runnable {
 
   /** Fourmis per second :) */
   private Long fpsCounter = 0L;
-  /** stocke la valeur du compteur lors du dernier timer */
+  /** stocke la valeur du incrementCounter lors du dernier timer */
   private Long lastFps = 0L;
 
   /****************************************************************************/
   /**
-   * incrémenter le compteur
+   * incrémenter le incrementCounter
    *
    */
-  public void compteur() {
+  public void incrementCounter() {
     synchronized (mMutexCompteur) {
       mCompteur++;
     }
@@ -447,7 +447,7 @@ public class PaintingAnts extends java.applet.Applet implements Runnable {
    */
   @Override
   public void run() {
-    // System.out.println(this.getName()+ ":run()");
+    // System.out.println(this.getName()+ ":moveAllMyAnts()");
 
     int i;
     String lMessage;
@@ -458,7 +458,7 @@ public class PaintingAnts extends java.applet.Applet implements Runnable {
 
 
     while (mApplis == currentThread) {
-      mColony.run();
+      mColony.moveAllMyAnts();
       if (mPause) {
         lMessage = "pause";
       } else {
@@ -517,9 +517,6 @@ public class PaintingAnts extends java.applet.Applet implements Runnable {
     showStatus("stopped...");
 
     fpsTimer.stop();
-
-    // On demande au Thread Colony de s'arreter et on attend qu'il s'arrete
-    mColony.pleaseStop();
 
     mApplis = null;
   }

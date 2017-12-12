@@ -1,44 +1,22 @@
 package org.polytechtours.javaperformance.tp.paintingants;
-
-/*
- * Colony.java
- *
- * Created on 11 avril 2007, 16:35
- *
- * To change this template, choose Tools | Options and locate the template under
- * the Source Creation and Management node. Right-click the template and choose
- * Open. You can then make changes to the template in the Source Editor.
- */
 import java.util.Vector;
 
 public class Colony{
 
-  private Boolean mustContinue = Boolean.TRUE;
-  private Vector<Ant> colonies;
-  private PaintingAnts mApplis;
+  private Vector<Ant> ants;
+  private PaintingAnts paintingAnts;
 
-  /** Creates a new instance of Colony */
-  public Colony(Vector<Ant> pColonie, PaintingAnts pApplis) {
-    colonies = pColonie;
-    mApplis = pApplis;
+  public Colony(Vector<Ant> ants, PaintingAnts paintingAnts) {
+    this.ants = ants;
+    this.paintingAnts = paintingAnts;
   }
 
-  public void pleaseStop() {
-    mustContinue = false;
-  }
-
-  public void run() {
-
-      if (!mApplis.getPause()) {
-        for (int i = 0; i < colonies.size(); i++) {
-          colonies.get(i).deplacer();
-          mApplis.compteur();
+  public void moveAllMyAnts() {
+      if (!paintingAnts.getPause()) {
+        for (int i = 0; i < ants.size(); i++) {
+          ants.get(i).move();
+          paintingAnts.incrementCounter();
         }
-      } else {
-        /*
-         * try { Thread.sleep(100); } catch (InterruptedException e) { break; }
-         */
-
       }
   }
 

@@ -89,10 +89,10 @@ public class Ant {
   }
 
   /*************************************************************************************************
-   * Titre : void deplacer() Description : Fonction de deplacement de la fourmi
+   * Titre : void move() Description : Fonction de deplacement de la fourmi
    *
    */
-  public synchronized void deplacer() {
+  public synchronized void move() {
     float tirage, prob1, prob2, prob3, total;
     int[] dir = new int[3];
     int i, j;
