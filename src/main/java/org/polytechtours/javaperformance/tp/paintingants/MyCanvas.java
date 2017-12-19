@@ -45,9 +45,9 @@ public class MyCanvas extends Canvas implements MouseListener {
   // tableau des couleurs, il permert de conserver en memoire l'état de chaque
   // pixel du canvas, ce qui est necessaire au deplacemet des fourmi
   // il sert aussi pour la fonction paint du Canvas
-  private Color[][] mCouleurs;
+  private int[][] mCouleurs;
   // couleur du fond
-  private Color mCouleurFond = new Color(255, 255, 255);
+  private int mCouleurFond = MyColorUtils.createIntColorFromRGB(255, 255, 255);
   // dimensions
   private Dimension mDimension = new Dimension();
 
@@ -67,23 +67,23 @@ public class MyCanvas extends Canvas implements MouseListener {
     mDimension = pDimension;
     setBounds(new Rectangle(0, 0, mDimension.width, mDimension.height));
 
-    this.setBackground(mCouleurFond);
+    this.setBackground(MyColorUtils.createCreateColorFromInt(mCouleurFond));
 
     // initialisation de la matrice des couleurs
-    mCouleurs = new Color[mDimension.width][mDimension.height];
+    mCouleurs = new int[mDimension.width][mDimension.height];
       for (i = 0; i != mDimension.width; i++) {
         for (j = 0; j != mDimension.height; j++) {
-          mCouleurs[i][j] = new Color(mCouleurFond.getRed(), mCouleurFond.getGreen(), mCouleurFond.getBlue());
+          mCouleurs[i][j] = mCouleurFond;
         }
       }
 
   }
 
   /******************************************************************************
-   * Titre : Color getCouleur Description : Cette fonction renvoie la couleur
+   * Titre : Color getIntColor Description : Cette fonction renvoie la couleur
    * d'une case
    ******************************************************************************/
-  public Color getCouleur(int x, int y) {
+  public int getIntColor(int x, int y) {
       return mCouleurs[x][y];
   }
 
@@ -123,9 +123,9 @@ public class MyCanvas extends Canvas implements MouseListener {
       // initialisation de la matrice des couleurs
 
       for (i = 0; i != mDimension.width; i++) {
-        for (j = 0; j != mDimension.height; j++) {
-          mCouleurs[i][j] = new Color(mCouleurFond.getRed(), mCouleurFond.getGreen(), mCouleurFond.getBlue());
-        }
+          for (j = 0; j != mDimension.height; j++) {
+              mCouleurs[i][j] = mCouleurFond;
+          }
       }
 
     // initialisation de la matrice de convolution : lissage moyen sur 9
@@ -289,7 +289,8 @@ public class MyCanvas extends Canvas implements MouseListener {
 
       for (i = 0; i < mDimension.width; i++) {
         for (j = 0; j < mDimension.height; j++) {
-          pGraphics.setColor(mCouleurs[i][j]);
+          pGraphics.setColor(new Color(MyColorUtils.getRed(mCouleurs[i][j]), MyColorUtils.getGreen(mCouleurs[i][j]), MyColorUtils.getBlue(mCouleurs[i][j])));
+          //todo
           pGraphics.fillRect(i, j, 1, 1);
       }
     }
@@ -303,7 +304,7 @@ public class MyCanvas extends Canvas implements MouseListener {
   public void setCouleur(int x, int y, Color c, int pTaille) {
     int i, j, k, l, m, n;
     float R, G, B;
-    Color lColor;
+    int lColor;
 
       if (!mSuspendu) {
         // on colorie la case sur laquelle se trouve la fourmi
@@ -311,7 +312,7 @@ public class MyCanvas extends Canvas implements MouseListener {
         mGraphics.fillRect(x, y, 1, 1);
       }
 
-      mCouleurs[x][y] = c;
+      mCouleurs[x][y] = MyColorUtils.createIntColorFromRGB(c.getRed(), c.getGreen(), c.getBlue());
 
       // on fait diffuser la couleur :
       switch (pTaille) {
@@ -328,14 +329,14 @@ public class MyCanvas extends Canvas implements MouseListener {
                 for (l = 0; l < 3; l++) {
                   m = (x + i + k - 2 + mDimension.width) % mDimension.width;
                   n = (y + j + l - 2 + mDimension.height) % mDimension.height;
-                  R += MyCanvas.mMatriceConv9[k][l] * mCouleurs[m][n].getRed();
-                  G += MyCanvas.mMatriceConv9[k][l] * mCouleurs[m][n].getGreen();
-                  B += MyCanvas.mMatriceConv9[k][l] * mCouleurs[m][n].getBlue();
+                  R += MyCanvas.mMatriceConv9[k][l] * MyColorUtils.getRed(mCouleurs[m][n]);
+                  G += MyCanvas.mMatriceConv9[k][l] * MyColorUtils.getGreen(mCouleurs[m][n]);
+                  B += MyCanvas.mMatriceConv9[k][l] * MyColorUtils.getBlue(mCouleurs[m][n]);
                 }
               }
-              lColor = new Color((int) R, (int) G, (int) B);
+              lColor = MyColorUtils.createIntColorFromRGB((int)R, (int)G, (int)B);
 
-              mGraphics.setColor(lColor);
+              mGraphics.setColor(new Color(MyColorUtils.getRed(lColor), MyColorUtils.getGreen(lColor), MyColorUtils.getBlue(lColor)));
 
               m = (x + i - 1 + mDimension.width) % mDimension.width;
               n = (y + j - 1 + mDimension.height) % mDimension.height;
@@ -356,13 +357,13 @@ public class MyCanvas extends Canvas implements MouseListener {
                 for (l = 0; l < 5; l++) {
                   m = (x + i + k - 4 + mDimension.width) % mDimension.width;
                   n = (y + j + l - 4 + mDimension.height) % mDimension.height;
-                  R += MyCanvas.mMatriceConv25[k][l] * mCouleurs[m][n].getRed();
-                  G += MyCanvas.mMatriceConv25[k][l] * mCouleurs[m][n].getGreen();
-                  B += MyCanvas.mMatriceConv25[k][l] * mCouleurs[m][n].getBlue();
+                    R += MyCanvas.mMatriceConv25[k][l] * MyColorUtils.getRed(mCouleurs[m][n]);
+                    G += MyCanvas.mMatriceConv25[k][l] * MyColorUtils.getGreen(mCouleurs[m][n]);
+                    B += MyCanvas.mMatriceConv25[k][l] * MyColorUtils.getBlue(mCouleurs[m][n]);
                 }
               }
-              lColor = new Color((int) R, (int) G, (int) B);
-              mGraphics.setColor(lColor);
+              lColor = MyColorUtils.createIntColorFromRGB((int)R, (int)G, (int)B);
+              mGraphics.setColor(new Color(MyColorUtils.getRed(lColor), MyColorUtils.getGreen(lColor), MyColorUtils.getBlue(lColor)));
               m = (x + i - 2 + mDimension.width) % mDimension.width;
               n = (y + j - 2 + mDimension.height) % mDimension.height;
 
@@ -384,13 +385,13 @@ public class MyCanvas extends Canvas implements MouseListener {
                 for (l = 0; l < 7; l++) {
                   m = (x + i + k - 6 + mDimension.width) % mDimension.width;
                   n = (y + j + l - 6 + mDimension.height) % mDimension.height;
-                  R += MyCanvas.mMatriceConv49[k][l] * mCouleurs[m][n].getRed();
-                  G += MyCanvas.mMatriceConv49[k][l] * mCouleurs[m][n].getGreen();
-                  B += MyCanvas.mMatriceConv49[k][l] * mCouleurs[m][n].getBlue();
+                    R += MyCanvas.mMatriceConv49[k][l] * MyColorUtils.getRed(mCouleurs[m][n]);
+                    G += MyCanvas.mMatriceConv49[k][l] * MyColorUtils.getGreen(mCouleurs[m][n]);
+                    B += MyCanvas.mMatriceConv49[k][l] * MyColorUtils.getBlue(mCouleurs[m][n]);
                 }
               }
-              lColor = new Color((int) R, (int) G, (int) B);
-              mGraphics.setColor(lColor);
+                lColor = MyColorUtils.createIntColorFromRGB((int)R, (int)G, (int)B);
+              mGraphics.setColor(new Color(MyColorUtils.getRed(lColor), MyColorUtils.getGreen(lColor), MyColorUtils.getBlue(lColor)));
               m = (x + i - 3 + mDimension.width) % mDimension.width;
               n = (y + j - 3 + mDimension.height) % mDimension.height;
 

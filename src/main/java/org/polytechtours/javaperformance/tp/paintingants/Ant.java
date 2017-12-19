@@ -112,7 +112,7 @@ public class Ant {
     if (applies.mBaseImage != null) {
       lCouleur = new Color(applies.mBaseImage.getRGB(i, j));
     } else {
-      lCouleur = new Color(painting.getCouleur(i, j).getRGB());
+      lCouleur = new Color(painting.getIntColor(i, j));
     }
     if (testCouleur(lCouleur)) {
       dir[0] = 1;
@@ -123,7 +123,7 @@ public class Ant {
     if (applies.mBaseImage != null) {
       lCouleur = new Color(applies.mBaseImage.getRGB(i, j));
     } else {
-      lCouleur = new Color(painting.getCouleur(i, j).getRGB());
+      lCouleur = new Color(painting.getIntColor(i, j));
     }
     if (testCouleur(lCouleur)) {
       dir[1] = 1;
@@ -133,7 +133,7 @@ public class Ant {
     if (applies.mBaseImage != null) {
       lCouleur = new Color(applies.mBaseImage.getRGB(i, j));
     } else {
-      lCouleur = new Color(painting.getCouleur(i, j).getRGB());
+      lCouleur = new Color(painting.getIntColor(i, j));
     }
     if (testCouleur(lCouleur)) {
       dir[2] = 1;
